@@ -1,0 +1,51 @@
+{
+        "applicationName": "ghost-ecs",
+        "deploymentGroupName": "ghost-ecs",
+        "deploymentConfigName": "CodeDeployDefault.ECSAllAtOnce",
+        "serviceRoleArn": "arn:aws:iam::11111111111:role/CodeDeployECSRole",
+        "triggerConfigurations": [],
+        "alarmConfiguration": {
+            "enabled": false,
+            "ignorePollAlarmFailure": false,
+            "alarms": []
+        },
+        "deploymentStyle": {
+            "deploymentType": "BLUE_GREEN",
+            "deploymentOption": "WITH_TRAFFIC_CONTROL"
+        },
+        "blueGreenDeploymentConfiguration": {
+            "terminateBlueInstancesOnDeploymentSuccess": {
+                "action": "TERMINATE",
+                "terminationWaitTimeInMinutes": 5
+            },
+            "deploymentReadyOption": {
+                "actionOnTimeout": "CONTINUE_DEPLOYMENT",
+                "waitTimeInMinutes": 0
+            }
+        },
+        "loadBalancerInfo": {
+            "targetGroupPairInfoList": [
+                {
+                    "targetGroups": [
+                        {
+                            "name": "ghostecstarget1"
+                        },
+                        {
+                            "name": "ghostecstarget2"
+                        }
+                    ],
+                    "prodTrafficRoute": {
+                        "listenerArns": [
+                            "arn:aws:elasticloadbalancing:eu-west-2:11111111111:listener/app/ecs-ghost/7d9f0d07eab1bbec/722f9969e2b206fc"
+                        ]
+                    }
+                }
+            ]
+        },
+        "ecsServices": [
+            {
+                "serviceName": "ghost-blog",
+                "clusterName": "ghost"
+            }
+        ]
+    }

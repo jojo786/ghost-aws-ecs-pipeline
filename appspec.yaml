@@ -1,0 +1,9 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: arn:aws:ecs:eu-west-2:11111111111:task-definition/ghost-blog:1
+        LoadBalancerInfo:
+          ContainerName: "ghost"
+          ContainerPort: 2368

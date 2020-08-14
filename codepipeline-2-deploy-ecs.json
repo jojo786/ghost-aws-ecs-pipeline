@@ -1,0 +1,96 @@
+{
+    "pipeline": {
+        "name": "ghost-2-deploy-ecs",
+        "roleArn": "arn:aws:iam::11111111111:role/service-role/AWSCodePipelineServiceRole-eu-west-2-ghost-1-commit-build-ecr",
+        "artifactStore": {
+            "type": "S3",
+            "location": "codepipeline-eu-west-2-191546893050"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "CodeCommit",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "BranchName": "master",
+                            "RepositoryName": "ghost-blog"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [],
+                        "region": "eu-west-2",
+                        "namespace": "SourceVariables"
+                    },
+                    {
+                        "name": "image",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "ECR",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "RepositoryName": "ghost"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "ghost-image"
+                            }
+                        ],
+                        "inputArtifacts": [],
+                        "region": "eu-west-2"
+                    }
+                ]
+            },
+            {
+                "name": "Deploy",
+                "actions": [
+                    {
+                        "name": "Deploy",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CodeDeployToECS",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "AppSpecTemplateArtifact": "SourceArtifact",
+                            "AppSpecTemplatePath": "appspec.yaml",
+                            "ApplicationName": "ghost-ecs",
+                            "DeploymentGroupName": "ghost-ecs",
+                            "Image1ArtifactName": "ghost-image",
+                            "Image1ContainerName": "IMAGE1_NAME",
+                            "TaskDefinitionTemplateArtifact": "SourceArtifact",
+                            "TaskDefinitionTemplatePath": "taskdef.json"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            },
+                            {
+                                "name": "ghost-image"
+                            }
+                        ],
+                        "region": "eu-west-2",
+                        "namespace": "DeployVariables"
+                    }
+                ]
+            }
+        ],
+        "version": 2
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "taskDefinition": "ghost-blog:1",
+    "cluster": "ghost",
+    "loadBalancers": [
+        {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:eu-west-2:11111111111:targetgroup/ghostecstarget1/4ff4d80c95688591",
+            "containerName": "ghost",
+            "containerPort": 2368
+        }
+    ],
+    "desiredCount": 2,
+    "launchType": "FARGATE",
+    "schedulingStrategy": "REPLICA",
+    "deploymentController": {
+        "type": "CODE_DEPLOY"
+    },
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "subnets": [
+                "subnet-65abf80c ",
+                "subnet-72f65b3e",
+                "subnet-cd50cfb7"
+            ],
+            "securityGroups": [
+                "sg-7dda4d19"
+            ],
+            "assignPublicIp": "ENABLED"
+        }
+    }
+}

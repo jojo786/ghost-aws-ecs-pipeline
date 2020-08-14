@@ -1,0 +1,70 @@
+{
+    "pipeline": {
+        "name": "ghost-1-commit-build-ecr",
+        "roleArn": "arn:aws:iam::11111111111:role/service-role/AWSCodePipelineServiceRole-eu-west-2-ghost-1-commit-build-ecr",
+        "artifactStore": {
+            "type": "S3",
+            "location": "codepipeline-eu-west-2-191546893050"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "CodeCommit",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "BranchName": "master",
+                            "RepositoryName": "ghost-blog"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [],
+                        "region": "eu-west-2",
+                        "namespace": "SourceVariables"
+                    }
+                ]
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "name": "Build",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "ghost"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "BuildArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "region": "eu-west-2",
+                        "namespace": "BuildVariables"
+                    }
+                ]
+            }
+        ],
+        "version": 1
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "applicationName": "tutorial-bluegreen-app",
+    "deploymentGroupName": "tutorial-bluegreen-dg",
+    "revision": {
+        "revisionType": "S3",
+        "s3Location": {
+            "bucket": "tutbg-bucket",
+            "key": "appspec.yaml",
+            "bundleType": "YAML"
+        }
+    }
+}

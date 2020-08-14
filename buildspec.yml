@@ -1,0 +1,19 @@
+--- 
+phases: 
+  pre_build: 
+    commands: 
+      - "echo Logging in to ECR..."
+      - "aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 11111111111.dkr.ecr.eu-west-2.amazonaws.com/ghost"
+  build: 
+    commands: 
+      - "echo Build started on `date`"
+      - "echo Building the Docker image..."
+      - "docker build -t ghost ."
+      - "docker tag ghost:latest 11111111111.dkr.ecr.eu-west-2.amazonaws.com/ghost"
+  post_build: 
+    commands: 
+      - "echo Build completed on `date`"
+      - "echo Pushing the Docker image..."
+      - "docker push 11111111111.dkr.ecr.eu-west-2.amazonaws.com/ghost"
+  
+version: 0.1  
